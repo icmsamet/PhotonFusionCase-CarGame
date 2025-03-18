@@ -1,3 +1,4 @@
+using _Game._Scripts.Managers;
 using Fusion;
 using UnityEngine;
 
@@ -8,13 +9,16 @@ namespace _Game._Scripts.Player
         [Header("**References**")]
         [SerializeField] private PrometeoCarController _carController;
 
+        private GameManager _gameManager => GameManager.Instance;
+        private CameraManager _cameraManager => CameraManager.Instance;
+
         private bool _canDrive = false;
 
         private void Start()
         {
             if (Object.HasInputAuthority)
             {
-                Camera.main.transform.SetParent(transform);
+                _cameraManager.SetCameraToPlayer(transform);
             }
         }
 
