@@ -12,7 +12,7 @@ namespace _Game._Scripts.Player
         {
             if (GetInput(out PlayerInputData data))
             {
-                _carController.SetDirection(data.keyCode);
+                _carController.Move(data.keyCode);
             }
         }
     }

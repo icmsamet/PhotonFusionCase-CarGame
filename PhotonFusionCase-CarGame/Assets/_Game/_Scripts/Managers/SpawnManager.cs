@@ -1,12 +1,31 @@
 using Fusion;
 using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace _Game._Scripts.Managers
 {
     public class SpawnManager : MonoBehaviour
     {
+        #region Instance
+        private static SpawnManager _ins;
+        public static SpawnManager Instance
+        {
+            get
+            {
+                if (!_ins)
+                {
+                    _ins = FindObjectOfType<SpawnManager>();
+                }
+                return _ins;
+            }
+        }
+        #endregion
+
+        [Header("**References**")]
         [SerializeField] private NetworkPrefabRef _playerPrefab;
+        [SerializeField] private List<Transform> _spawnPoints;
+
         private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
 
         private void Start()
@@ -17,16 +36,14 @@ namespace _Game._Scripts.Managers
         {
             if (runner.IsServer)
             {
-                // Create a unique position for the player
-                Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 1, 0);
-                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
-                // Keep track of the player avatars for easy access
+                NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, _spawnPoints[runner.ActivePlayers.Count()-1].position, Quaternion.identity, player);
                 _spawnedCharacters.Add(player, networkPlayerObject);
             }
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
+            runner.Shutdown();
             if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
             {
                 runner.Despawn(networkObject);
