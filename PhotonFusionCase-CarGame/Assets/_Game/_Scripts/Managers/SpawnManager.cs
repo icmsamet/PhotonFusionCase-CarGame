@@ -26,7 +26,7 @@ namespace _Game._Scripts.Managers
         [SerializeField] private NetworkPrefabRef _playerPrefab;
         [SerializeField] private List<Transform> _spawnPoints;
 
-        private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+        private Dictionary<int, NetworkObject> _spawnedCharacters = new Dictionary<int, NetworkObject>();
 
         private void Start()
         {
@@ -37,17 +37,18 @@ namespace _Game._Scripts.Managers
             if (runner.IsServer)
             {
                 NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, _spawnPoints[runner.ActivePlayers.Count()-1].position, Quaternion.identity, player);
-                _spawnedCharacters.Add(player, networkPlayerObject);
+                networkPlayerObject.GetComponent<Player.Player>().ID = player.PlayerId;
+                _spawnedCharacters.Add(player.PlayerId, networkPlayerObject);
             }
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
             runner.Shutdown();
-            if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
+            if (_spawnedCharacters.TryGetValue(player.PlayerId, out NetworkObject networkObject))
             {
                 runner.Despawn(networkObject);
-                _spawnedCharacters.Remove(player);
+                _spawnedCharacters.Remove(player.PlayerId);
             }
         }
 
@@ -57,9 +58,9 @@ namespace _Game._Scripts.Managers
         {
             foreach (var entry in _spawnedCharacters)
             {
-                PlayerRef player = entry.Key;
+                int id = entry.Key;
                 NetworkObject networkObject = entry.Value;
-                if (player == Runner.LocalPlayer)
+                if (id == Runner.LocalPlayer.PlayerId)
                 {
                     return networkObject;
                 }
@@ -72,7 +73,7 @@ namespace _Game._Scripts.Managers
 
         #region Properties
 
-        public Dictionary<PlayerRef, NetworkObject> SpawnedCharacters => _spawnedCharacters;
+        public Dictionary<int, NetworkObject> SpawnedCharacters => _spawnedCharacters;
 
         #endregion
     }

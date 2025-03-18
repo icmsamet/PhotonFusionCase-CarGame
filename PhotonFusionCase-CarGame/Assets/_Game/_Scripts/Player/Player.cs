@@ -1,6 +1,6 @@
-using _Game._Scripts.Managers;
 using Fusion;
 using UnityEngine;
+using _Game._Scripts.Managers;
 
 namespace _Game._Scripts.Player
 {
@@ -9,10 +9,10 @@ namespace _Game._Scripts.Player
         [Header("**References**")]
         [SerializeField] private PrometeoCarController _carController;
 
-        private GameManager _gameManager => GameManager.Instance;
-        private CameraManager _cameraManager => CameraManager.Instance;
-
+        private int _id = 0;
         private bool _canDrive = false;
+
+        private CameraManager _cameraManager => CameraManager.Instance;
 
         private void Start()
         {
@@ -41,6 +41,10 @@ namespace _Game._Scripts.Player
         private void RPC_SetCanDrive(bool value)
         {
             _canDrive = value;
+            if(value == false)
+            {
+                _carController.Brakes();
+            }
         }
 
         #region Properties
@@ -48,7 +52,12 @@ namespace _Game._Scripts.Player
         public bool CanDrive
         {
             get => _canDrive;
-            set => _canDrive = value;
+        }
+
+        public int ID
+        {
+            get => _id;
+            set => _id = value;
         }
 
         #endregion

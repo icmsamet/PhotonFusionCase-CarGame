@@ -584,7 +584,8 @@ public class PrometeoCarController : MonoBehaviour
     // will depend on the handbrakeDriftMultiplier variable. If this value is small, then the car will not drift too much, but if
     // it is high, then you could make the car to feel like going on ice.
     public void Handbrake(){
-      CancelInvoke("RecoverTraction");
+        CancelInvoke("DecelerateCar");
+        CancelInvoke("RecoverTraction");
       // We are going to start losing traction smoothly, there is were our 'driftingAxis' variable takes
       // place. This variable will start from 0 and will reach a top value of 1, which means that the maximum
       // drifting value has been reached. It will increase smoothly by using the variable Time.deltaTime.

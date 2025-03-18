@@ -31,14 +31,15 @@ namespace _Game._Scripts.Managers
         [SerializeField] private GameObject _gameplayPanel;
         [SerializeField] private Button _hostStart_btn;
 
-        private GameManager _gameManager => GameManager.Instance;
+        private Dictionary<int, PlayerInfoElement> _elements = new Dictionary<int, PlayerInfoElement>();
 
-        private Dictionary<PlayerRef, PlayerInfoElement> _elements = new Dictionary<PlayerRef, PlayerInfoElement>();
+        private GameManager _gameManager => GameManager.Instance;
 
         private void Start()
         {
             _hostStart_btn.onClick.AddListener(HostStartButton);
             //
+            _gameManager.onGameEndAction += OnGameEnd;
             _gameManager.onGameStartAction += OnGameStart;
         }
 
@@ -68,19 +69,19 @@ namespace _Game._Scripts.Managers
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
-            if (_elements.TryGetValue(player, out PlayerInfoElement element))
+            if (_elements.TryGetValue(player.PlayerId, out PlayerInfoElement element))
             {
                 Destroy(element);
-                _elements.Remove(player);
+                _elements.Remove(player.PlayerId);
             }
         }
 
         private void SpawnPlayerElement(NetworkRunner runner, PlayerRef player)
         {
-            if (!_elements.ContainsKey(player))
+            if (!_elements.ContainsKey(player.PlayerId))
             {
                 PlayerInfoElement element = Instantiate(_elementPrefab, _elementParent);
-                element.Initialize(player.PlayerId.ToString());
+                element.Initialize(player.PlayerId);
 
                 if (player == runner.LocalPlayer)
                 {
@@ -91,7 +92,7 @@ namespace _Game._Scripts.Managers
                     element.SetNicknameColor(Color.white);
                 }
 
-                _elements.Add(player, element);
+                _elements.Add(player.PlayerId, element);
             }
         }
 
@@ -106,6 +107,21 @@ namespace _Game._Scripts.Managers
 
         #region Actions
 
+        private void OnGameEnd()
+        {
+            RPC_OnGameEnd();
+        }
+
+        [Rpc]
+        private void RPC_OnGameEnd()
+        {
+            _gameplayPanel.SetActive(false);
+            foreach (var item in _elements)
+            {
+                item.Value.StopCounting();
+            }
+        }
+
         private void OnGameStart()
         {
             RPC_OnGameStart();
@@ -117,7 +133,17 @@ namespace _Game._Scripts.Managers
             _hostPanel.SetActive(false);
             _clientPanel.SetActive(false);
             _gameplayPanel.SetActive(true);
+            foreach (var item in _elements)
+            {
+                item.Value.StartCounting();
+            }
         }
+
+        #endregion
+
+        #region Properties
+
+        public Dictionary<int, PlayerInfoElement> Elements => _elements;
 
         #endregion
     }

@@ -9,14 +9,16 @@ namespace _Game._Scripts.UI.Player
         [SerializeField] private TextMeshProUGUI _timer_txt;
         [SerializeField] private TextMeshProUGUI _nickname_txt;
 
+        [SerializeField] private int _id = 0;
         private bool _isCounting = false;
         private float _timer = 0f;
 
-        public void Initialize(string nickname)
+        public void Initialize(int id)
         {
+            _id = id;
             _timer = 0f;
             _timer_txt.text = _timer.ToString("F2");
-            _nickname_txt.text = nickname;
+            _nickname_txt.text = "Player " + _id;
             _nickname_txt.color = Color.white;
         }
 
