@@ -1,10 +1,10 @@
 March - 2025
 
-Hello!
+# Online Racing Game Prototype
 
-# Online Racing Game Prototype with Unity 6 and Photon Fusion 2
-
-This project is an **online racing game prototype** developed using **Unity 6** and **Photon Fusion 2**. Players can easily join a game with an **automatic room creation system** and compete with other players in **5-player rooms**.
+This prototype was developed over 1.5 days, leveraging my previous knowledge of Photon PUN and working with Unity 6 and Photon Fusion 2. 
+It showcases the core mechanics of a multiplayer car racing game, utilizing Photon Fusion 2 for smooth online gameplay. 
+The goal is to create a foundation for further feature additions and gameplay improvements in the future.
 
 <img src="https://github.com/user-attachments/assets/56d11ecb-ba3c-4174-87d9-20b95ee09e3d" width="256">
 <img src="https://github.com/user-attachments/assets/b4678577-1ef0-4043-a8c4-72f0cc5c8ded" width="512">
