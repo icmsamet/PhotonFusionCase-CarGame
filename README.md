@@ -1,8 +1,8 @@
 March - 2025
 
-# Online Racing Game Prototype
+# PhotonFusionCase-CarGame
 
-This prototype was developed over 1.5 days, leveraging my previous knowledge of Photon PUN and working with Unity 6 and Photon Fusion 2. 
+This case was developed over 1.5 days, leveraging my previous knowledge of Photon PUN and working with Unity 6 and Photon Fusion 2. 
 It showcases the core mechanics of a multiplayer car racing game, utilizing Photon Fusion 2 for smooth online gameplay. 
 The goal is to create a foundation for further feature additions and gameplay improvements in the future.
 
