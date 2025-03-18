@@ -1,12 +1,16 @@
-using _Game._Scripts.Player;
 using Fusion;
-using System;
 using UnityEngine;
+using _Game._Scripts.Player;
 
 namespace _Game._Scripts.Managers
 {
     public class InputManager : MonoBehaviour
     {
+        /// <summary>
+        /// Handles player input and sends it to the network system.
+        /// </summary>
+        /// <param name="runner">The NetworkRunner instance handling the game session.</param>
+        /// <param name="input">The network input container to store player actions.</param>
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
             var data = new PlayerInputData();
@@ -28,5 +32,6 @@ namespace _Game._Scripts.Managers
 
             input.Set(data);
         }
+
     }
 }

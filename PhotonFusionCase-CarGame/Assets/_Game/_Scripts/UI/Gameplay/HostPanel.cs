@@ -11,10 +11,17 @@ namespace _Game._Scripts.UI.Gameplay
 
         private GameManager _gameManager => GameManager.Instance;
 
+        /// <summary>
+        /// Subscribes the HostStartButton method to the button's click event.
+        /// </summary>
         private void Start()
         {
             _hostStart_btn.onClick.AddListener(HostStartButton);
         }
+
+        /// <summary>
+        /// Invokes the game start action in the GameManager when the host start button is clicked.
+        /// </summary>
         private void HostStartButton()
         {
             _gameManager.onGameStartAction?.Invoke();

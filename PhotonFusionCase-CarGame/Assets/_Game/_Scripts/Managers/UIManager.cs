@@ -1,6 +1,5 @@
 using Fusion;
 using UnityEngine;
-using UnityEngine.UI;
 using _Game._Scripts.UI.Player;
 using System.Collections.Generic;
 using _Game._Scripts.UI.Gameplay;
@@ -10,6 +9,9 @@ namespace _Game._Scripts.Managers
     public class UIManager : NetworkBehaviour
     {
         #region Instance
+        /// <summary>
+        /// Singleton instance of UIManager.
+        /// </summary>
         private static UIManager _ins;
         public static UIManager Instance
         {
@@ -32,6 +34,9 @@ namespace _Game._Scripts.Managers
         [SerializeField] private FinishPanel _finishPanel;
         [SerializeField] private GameObject _gameplayPanel;
 
+        /// <summary>
+        /// Stores player UI elements with their IDs.
+        /// </summary>
         private Dictionary<int, PlayerInfoElement> _elements = new Dictionary<int, PlayerInfoElement>();
 
         private GameManager _gameManager => GameManager.Instance;
@@ -42,6 +47,15 @@ namespace _Game._Scripts.Managers
             _gameManager.onGameStartAction += OnGameStart;
         }
 
+        #region Player
+
+        /// <summary>
+        /// Handles UI updates when a player joins.
+        /// Spawns a player info element for each player.
+        /// Updates host and client panel visibility.
+        /// </summary>
+        /// <param name="runner">Network session manager.</param>
+        /// <param name="player">The joining player reference.</param>
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
         {
             foreach (PlayerRef _player in runner.ActivePlayers)
@@ -66,6 +80,12 @@ namespace _Game._Scripts.Managers
             }
         }
 
+        /// <summary>
+        /// Handles UI cleanup when a player leaves.
+        /// Removes their player info element.
+        /// </summary>
+        /// <param name="runner">Network session manager.</param>
+        /// <param name="player">The leaving player reference.</param>
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
             if (_elements.TryGetValue(player.PlayerId, out PlayerInfoElement element))
@@ -75,6 +95,11 @@ namespace _Game._Scripts.Managers
             }
         }
 
+        /// <summary>
+        /// Spawns a player info UI element.
+        /// </summary>
+        /// <param name="runner">Network session manager.</param>
+        /// <param name="player">The player reference.</param>
         private void SpawnPlayerElement(NetworkRunner runner, PlayerRef player)
         {
             if (!_elements.ContainsKey(player.PlayerId))
@@ -95,8 +120,14 @@ namespace _Game._Scripts.Managers
             }
         }
 
+        #endregion
+
         #region Actions
 
+        /// <summary>
+        /// Triggers when the game ends.
+        /// Hides gameplay UI and shows the finish panel.
+        /// </summary>
         private void OnGameEnd()
         {
             RPC_OnGameEnd();
@@ -113,6 +144,10 @@ namespace _Game._Scripts.Managers
             }
         }
 
+        /// <summary>
+        /// Triggers when the game starts.
+        /// Hides pre-game UI and shows the gameplay panel.
+        /// </summary>
         private void OnGameStart()
         {
             RPC_OnGameStart();
@@ -134,10 +169,17 @@ namespace _Game._Scripts.Managers
 
         #region Properties
 
+        /// <summary>
+        /// Gets the FinishPanel UI reference.
+        /// </summary>
         public FinishPanel FinishPanel => _finishPanel;
 
+        /// <summary>
+        /// Gets the dictionary of player UI elements.
+        /// </summary>
         public Dictionary<int, PlayerInfoElement> Elements => _elements;
 
         #endregion
+
     }
 }
