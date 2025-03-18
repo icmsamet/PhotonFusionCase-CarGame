@@ -302,11 +302,15 @@ public class PrometeoCarController : MonoBehaviour
             Handbrake();
         }
 
+        if(keyCode != KeyCode.A && keyCode != KeyCode.D && keyCode != KeyCode.Space)
+        {
+            ResetSteeringAngle();
+        }
+
         if(keyCode == KeyCode.None)
         {
             InvokeRepeating("DecelerateCar", 0f, 0.1f);
             deceleratingCar = true;
-            ResetSteeringAngle();
         }
 
         AnimateWheelMeshes();
