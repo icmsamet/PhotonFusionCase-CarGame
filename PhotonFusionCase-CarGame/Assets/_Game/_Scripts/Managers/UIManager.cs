@@ -1,11 +1,12 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 using _Game._Scripts.UI.Player;
 using System.Collections.Generic;
 
 namespace _Game._Scripts.Managers
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager : NetworkBehaviour
     {
         #region Instance
         private static UIManager _ins;
@@ -25,8 +26,21 @@ namespace _Game._Scripts.Managers
         [Header("**References**")]
         [SerializeField] private RectTransform _elementParent;
         [SerializeField] private PlayerInfoElement _elementPrefab;
+        [SerializeField] private GameObject _hostPanel;
+        [SerializeField] private GameObject _clientPanel;
+        [SerializeField] private GameObject _gameplayPanel;
+        [SerializeField] private Button _hostStart_btn;
 
-        private Dictionary<PlayerRef, PlayerInfoElement> _spawnedElements = new Dictionary<PlayerRef, PlayerInfoElement>();
+        private GameManager _gameManager => GameManager.Instance;
+
+        private Dictionary<PlayerRef, PlayerInfoElement> _elements = new Dictionary<PlayerRef, PlayerInfoElement>();
+
+        private void Start()
+        {
+            _hostStart_btn.onClick.AddListener(HostStartButton);
+            //
+            _gameManager.onGameStartAction += OnGameStart;
+        }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
         {
@@ -37,21 +51,33 @@ namespace _Game._Scripts.Managers
                     SpawnPlayerElement(runner, _player);
                 }
             }
+
             SpawnPlayerElement(runner, runner.LocalPlayer);
+
+            if (runner.IsServer)
+            {
+                _hostPanel.SetActive(true);
+                _clientPanel.SetActive(false);
+            }
+            else
+            {
+                _hostPanel.SetActive(false);
+                _clientPanel.SetActive(true);
+            }
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
-            if (_spawnedElements.TryGetValue(player, out PlayerInfoElement element))
+            if (_elements.TryGetValue(player, out PlayerInfoElement element))
             {
                 Destroy(element);
-                _spawnedElements.Remove(player);
+                _elements.Remove(player);
             }
         }
 
         private void SpawnPlayerElement(NetworkRunner runner, PlayerRef player)
         {
-            if (!_spawnedElements.ContainsKey(player))
+            if (!_elements.ContainsKey(player))
             {
                 PlayerInfoElement element = Instantiate(_elementPrefab, _elementParent);
                 element.Initialize(player.PlayerId.ToString());
@@ -65,8 +91,34 @@ namespace _Game._Scripts.Managers
                     element.SetNicknameColor(Color.white);
                 }
 
-                _spawnedElements.Add(player, element);
+                _elements.Add(player, element);
             }
         }
+
+        #region Button Actions
+
+        private void HostStartButton()
+        {
+            _gameManager.onGameStartAction?.Invoke();
+        }
+
+        #endregion
+
+        #region Actions
+
+        private void OnGameStart()
+        {
+            RPC_OnGameStart();
+        }
+
+        [Rpc]
+        private void RPC_OnGameStart()
+        {
+            _hostPanel.SetActive(false);
+            _clientPanel.SetActive(false);
+            _gameplayPanel.SetActive(true);
+        }
+
+        #endregion
     }
 }

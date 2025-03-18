@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace _Game._Scripts.Managers
 {
-    public class SpawnManager : MonoBehaviour
+    public class SpawnManager : NetworkBehaviour
     {
         #region Instance
         private static SpawnManager _ins;
@@ -50,5 +50,30 @@ namespace _Game._Scripts.Managers
                 _spawnedCharacters.Remove(player);
             }
         }
+
+        #region Get
+
+        public NetworkObject GetLocalNetworkObject()
+        {
+            foreach (var entry in _spawnedCharacters)
+            {
+                PlayerRef player = entry.Key;
+                NetworkObject networkObject = entry.Value;
+                if (player == Runner.LocalPlayer)
+                {
+                    return networkObject;
+                }
+            }
+            return null;
+        }
+
+
+        #endregion
+
+        #region Properties
+
+        public Dictionary<PlayerRef, NetworkObject> SpawnedCharacters => _spawnedCharacters;
+
+        #endregion
     }
 }

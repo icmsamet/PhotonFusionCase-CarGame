@@ -8,12 +8,45 @@ namespace _Game._Scripts.Player
         [Header("**References**")]
         [SerializeField] private PrometeoCarController _carController;
 
+        private bool _canDrive = false;
+
+        private void Start()
+        {
+            if (Object.HasInputAuthority)
+            {
+                Camera.main.transform.SetParent(transform);
+            }
+        }
+
         public override void FixedUpdateNetwork()
         {
+            if (!_canDrive) return;
+
             if (GetInput(out PlayerInputData data))
             {
                 _carController.Move(data.keyCode);
             }
         }
+
+        public void SetCanDrive(bool value)
+        {
+            RPC_SetCanDrive(value);
+        }
+
+        [Rpc]
+        private void RPC_SetCanDrive(bool value)
+        {
+            _canDrive = value;
+        }
+
+        #region Properties
+
+        public bool CanDrive
+        {
+            get => _canDrive;
+            set => _canDrive = value;
+        }
+
+        #endregion
     }
 }
