@@ -9,22 +9,19 @@ namespace _Game._Scripts.UI.Player
         [SerializeField] private TextMeshProUGUI _timer_txt;
         [SerializeField] private TextMeshProUGUI _nickname_txt;
 
-        [SerializeField] private int _id = 0;
-        private bool _isCounting = false;
+        private int _id = 0;
         private float _timer = 0f;
+        private bool _isCounting = false;
+        private string _nickname = string.Empty;
 
         public void Initialize(int id)
         {
             _id = id;
             _timer = 0f;
             _timer_txt.text = _timer.ToString("F2");
-            _nickname_txt.text = "Player " + _id;
+            _nickname = "Player " + _id;
+            _nickname_txt.text = _nickname;
             _nickname_txt.color = Color.white;
-        }
-
-        public void SetNicknameColor(Color color)
-        {
-            _nickname_txt.color = color;
         }
 
         private void Update()
@@ -35,6 +32,17 @@ namespace _Game._Scripts.UI.Player
             _timer_txt.text = _timer.ToString("F2");
         }
 
+        #region Set
+
+        public void SetNicknameColor(Color color)
+        {
+            _nickname_txt.color = color;
+        }
+
+        #endregion
+
+        #region Counting
+
         public void StartCounting()
         {
             _isCounting = true;
@@ -44,5 +52,15 @@ namespace _Game._Scripts.UI.Player
         {
             _isCounting = false;
         }
+
+        #endregion
+
+        #region Properties
+
+        public float Timer => _timer;
+
+        public string Nickname => _nickname;
+
+        #endregion
     }
 }

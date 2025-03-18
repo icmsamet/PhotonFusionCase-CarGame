@@ -2,6 +2,8 @@ using Fusion;
 using System.Linq;
 using UnityEngine.Events;
 using _Game._Scripts.UI.Player;
+using System.Collections.Generic;
+using _Game._Scripts.UI.Gameplay;
 
 namespace _Game._Scripts.Managers
 {
@@ -26,12 +28,15 @@ namespace _Game._Scripts.Managers
         public UnityAction onGameStartAction = null;
 
         private int _crossedLinePlayerCount = 0;
+        private FinishPanel _finishPanel;
 
         private UIManager _uiManager => UIManager.Instance;
         private SpawnManager _spawnManager => SpawnManager.Instance;
 
         private void Start()
         {
+            _finishPanel = _uiManager.FinishPanel;
+            //
             onGameEndAction += OnGameEnd;
             onGameStartAction += OnGameStart;
         }
@@ -77,6 +82,11 @@ namespace _Game._Scripts.Managers
             {
                 item.Value.GetComponent<Player.Player>().SetCanDrive(false);
             }
+
+            List<PlayerInfoElement> sortedList = _uiManager.Elements.Values.OrderBy(e => e.Timer).ToList();
+            _finishPanel.SetWinnerPlayer($"{sortedList[0].Nickname} \n {sortedList[0].Timer.ToString("F2")}");
+            sortedList.RemoveAt(0);
+            _finishPanel.SetOtherPlayersResult(sortedList);
         }
 
         private void OnGameStart()

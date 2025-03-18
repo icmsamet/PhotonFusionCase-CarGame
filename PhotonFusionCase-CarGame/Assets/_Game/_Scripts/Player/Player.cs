@@ -35,6 +35,13 @@ namespace _Game._Scripts.Player
         public void SetCanDrive(bool value)
         {
             RPC_SetCanDrive(value);
+            if(value == false)
+            {
+                if (Object.HasInputAuthority)
+                {
+                    _cameraManager.SetCameraToFinishLine();
+                }
+            }
         }
 
         [Rpc]

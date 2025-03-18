@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using _Game._Scripts.UI.Player;
 using System.Collections.Generic;
+using _Game._Scripts.UI.Gameplay;
 
 namespace _Game._Scripts.Managers
 {
@@ -28,8 +29,8 @@ namespace _Game._Scripts.Managers
         [SerializeField] private PlayerInfoElement _elementPrefab;
         [SerializeField] private GameObject _hostPanel;
         [SerializeField] private GameObject _clientPanel;
+        [SerializeField] private FinishPanel _finishPanel;
         [SerializeField] private GameObject _gameplayPanel;
-        [SerializeField] private Button _hostStart_btn;
 
         private Dictionary<int, PlayerInfoElement> _elements = new Dictionary<int, PlayerInfoElement>();
 
@@ -37,8 +38,6 @@ namespace _Game._Scripts.Managers
 
         private void Start()
         {
-            _hostStart_btn.onClick.AddListener(HostStartButton);
-            //
             _gameManager.onGameEndAction += OnGameEnd;
             _gameManager.onGameStartAction += OnGameStart;
         }
@@ -96,15 +95,6 @@ namespace _Game._Scripts.Managers
             }
         }
 
-        #region Button Actions
-
-        private void HostStartButton()
-        {
-            _gameManager.onGameStartAction?.Invoke();
-        }
-
-        #endregion
-
         #region Actions
 
         private void OnGameEnd()
@@ -116,6 +106,7 @@ namespace _Game._Scripts.Managers
         private void RPC_OnGameEnd()
         {
             _gameplayPanel.SetActive(false);
+            _finishPanel.gameObject.SetActive(true);
             foreach (var item in _elements)
             {
                 item.Value.StopCounting();
@@ -142,6 +133,8 @@ namespace _Game._Scripts.Managers
         #endregion
 
         #region Properties
+
+        public FinishPanel FinishPanel => _finishPanel;
 
         public Dictionary<int, PlayerInfoElement> Elements => _elements;
 

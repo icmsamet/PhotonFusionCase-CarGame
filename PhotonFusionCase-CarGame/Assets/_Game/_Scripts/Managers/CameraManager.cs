@@ -1,6 +1,6 @@
 using Fusion;
-using Unity.Cinemachine;
 using UnityEngine;
+using Unity.Cinemachine;
 
 namespace _Game._Scripts.Managers
 {
@@ -22,6 +22,7 @@ namespace _Game._Scripts.Managers
         #endregion
 
         [Header("**References**")]
+        [SerializeField] private CinemachineCamera _finishLineCamera;
         [SerializeField] private CinemachineCamera _carShowRoomCamera;
         [SerializeField] private CinemachineCamera _playerFollowCamera;
 
@@ -29,34 +30,27 @@ namespace _Game._Scripts.Managers
 
         private void Start()
         {
-            _gameManager.onGameEndAction += OnGameEnd;
+            _gameManager.onGameEndAction += OnEndAction;
         }
 
-        #region Action
-
-        private void OnGameEnd()
+        private void OnEndAction()
         {
-            RPC_OnGameEnd();
+            SetCameraToFinishLine();
         }
 
-        [Rpc]
-        private void RPC_OnGameEnd()
+        public void SetCameraToFinishLine()
         {
-            _carShowRoomCamera.gameObject.SetActive(true);
+            _finishLineCamera.gameObject.SetActive(true);
+            _carShowRoomCamera.gameObject.SetActive(false);
             _playerFollowCamera.gameObject.SetActive(false);
         }
 
-        #endregion
-
-        #region Set
-
         public void SetCameraToPlayer(Transform player)
         {
+            _finishLineCamera.gameObject.SetActive(false);
             _carShowRoomCamera.gameObject.SetActive(false);
             _playerFollowCamera.gameObject.SetActive(true);
             _playerFollowCamera.Target.TrackingTarget = player;
         }
-
-        #endregion
     }
 }
