@@ -1427,14 +1427,14 @@ MonoBehaviour:
   rearLeftCollider: {fileID: 3815642816207395751}
   rearRightMesh: {fileID: 5247523758494111573}
   rearRightCollider: {fileID: 594166515873831637}
-  useEffects: 1
+  useEffects: 0
   RLWParticleSystem: {fileID: 0}
   RRWParticleSystem: {fileID: 0}
   RLWTireSkid: {fileID: 3093934431163527318}
   RRWTireSkid: {fileID: 3730214538984123522}
   useUI: 0
   carSpeedText: {fileID: 0}
-  useSounds: 1
+  useSounds: 0
   carEngineSound: {fileID: 0}
   tireScreechSound: {fileID: 0}
   useTouchControls: 0
@@ -2378,7 +2378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 386912587
   ObjectInterest: 1
-  Flags: 1
+  Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 7111843948440333557}

@@ -17,11 +17,11 @@
     "Simulation": {
         "InputDataWordCount": 0,
         "ReplicationFeatures": 1,
-        "InputTransferMode": 0,
-        "SimulationUpdateTimeMode": 0,
+        "InputTransferMode": 1,
+        "SimulationUpdateTimeMode": 1,
         "PlayerCount": 5,
         "TickRateSelection": {
-            "Client": 64,
+            "Client": 256,
             "ServerIndex": 0,
             "ClientSendIndex": 0,
             "ServerSendIndex": 0
